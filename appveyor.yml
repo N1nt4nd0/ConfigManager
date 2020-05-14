@@ -2,7 +2,7 @@ version: 1.0.{build}
 build_script:
   - gradlew jar
 artifacts:
-- path: build\libs\ConfigManager-1.0.0.jar
+- path: build\libs\ConfigManager.jar
   name: out_jar
 deploy:
 - provider: GitHub
