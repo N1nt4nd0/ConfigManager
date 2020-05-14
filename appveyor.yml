@@ -3,11 +3,11 @@ build_script:
   - gradlew jar
 artifacts:
 - path: build\libs\ConfigManager-1.0.0.jar
-  name: main
+  name: out_jar
 deploy:
 - provider: GitHub
   auth_token:
-  secure: G5NAi+1fvUE/+n7j9+Fu3S0z76ZjaO7d9DwcOtiVHYZu7/z7Jhe7wsayXMFGaRUY
-  artifact: main
-  force_update: true
+    secure: G5NAi+1fvUE/+n7j9+Fu3S0z76ZjaO7d9DwcOtiVHYZu7/z7Jhe7wsayXMFGaRUY
+  artifact: out_jar
   draft: true
+  force_update: true
