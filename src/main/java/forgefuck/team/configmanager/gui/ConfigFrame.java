@@ -13,7 +13,6 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.border.TitledBorder;
 
-import forgefuck.team.configmanager.Constants;
 import forgefuck.team.configmanager.objects.ConfigFile;
 import forgefuck.team.configmanager.objects.ConfigFolder;
 import forgefuck.team.configmanager.objects.Module;
@@ -27,7 +26,7 @@ public class ConfigFrame extends ExtendFrame {
     private final JTextField directoryField;
     
     public ConfigFrame() {
-        super("Xenobyte Config Manager v." + Constants.VERSION);
+        super("Xenobyte Config Manager");
         configsList = new ScrollingList<ConfigFile>("Конфигурации", 5, ListSorting.NONE);
         modulesList = new ScrollingList<Module>("Модули", 15, ListSorting.ALPHABET);
         createBackupBut = new JButton("Сохранить в бэкап");
