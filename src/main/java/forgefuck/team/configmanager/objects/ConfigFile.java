@@ -33,7 +33,7 @@ public class ConfigFile extends FileProvider {
                 isConfigFile = true;
                 data = checkData;
                 data.moduleData.forEach((mod, flds) -> {
-                    modules.add(new Module(mod, flds));
+                    modules.add(new Module(this, mod, flds));
                 });
             }
         }

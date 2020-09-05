@@ -8,23 +8,19 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import forgefuck.team.configmanager.misc.Lang;
 import forgefuck.team.configmanager.objects.Module;
 
 public class ModuleEditFrame extends ExtendFrame {
     
     private final JPanel globalPanel, localPanel;
     private final JButton acceptBut, cancelBut;
-    private static ModuleEditFrame lastFrame;
 
     public ModuleEditFrame(Module module) {
-        super(module.getName() + " - параметры", DISPOSE_ON_CLOSE);
-        if (lastFrame != null) {
-            lastFrame.dispose();
-        }
-        lastFrame = this;
-        acceptBut = new JButton("Применить");
-        cancelBut = new JButton("Отмена");
+        super(module.getName() + " - " + module.getParent().getName(), DISPOSE_ON_CLOSE);
         globalPanel = new JPanel();
+        acceptBut = new JButton();
+        cancelBut = new JButton();
         localPanel = new JPanel();
         globalPanel.setBorder(BorderFactory.createEtchedBorder());
         localPanel.setBorder(BorderFactory.createEtchedBorder());
@@ -58,6 +54,11 @@ public class ModuleEditFrame extends ExtendFrame {
     
     public Stream<FieldPanel> getFields() {
         return Stream.concat(Arrays.stream(globalPanel.getComponents()), Arrays.stream(localPanel.getComponents())).filter(c -> c instanceof FieldPanel).map(c -> (FieldPanel) c);
+    }
+
+    @Override public void localizeSet() {
+        acceptBut.setText(Lang.get("Accept", "Применить"));
+        cancelBut.setText(Lang.get("Cancel", "Отмена"));
     }
 
 }

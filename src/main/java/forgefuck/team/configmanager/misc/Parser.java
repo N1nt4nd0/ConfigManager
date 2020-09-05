@@ -10,7 +10,7 @@ import com.google.gson.JsonSyntaxException;
 
 import forgefuck.team.configmanager.objects.ModuleField;
 
-public class Parser { //TODO make fine
+public class Parser {
     
     public static Object parseFieldValue(ModuleField field) {
         return parseFieldValue(field.getName(), field.getType(), field.getValue());

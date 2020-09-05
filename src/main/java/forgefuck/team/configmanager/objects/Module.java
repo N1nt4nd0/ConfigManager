@@ -7,10 +7,12 @@ import java.util.Map;
 public class Module {
     
     private final List<ModuleField> fields;
+    private final ConfigFile parent;
     private final String name;
     
-    public Module(String name, Map<String, List<String>> moduleContent) {
+    public Module(ConfigFile parent, String name, Map<String, List<String>> moduleContent) {
         this.fields = new ArrayList<ModuleField>();
+        this.parent = parent;
         this.name = name;
         moduleContent.forEach((fName, data) -> {
             fields.add(new ModuleField(fName, data));
@@ -19,6 +21,10 @@ public class Module {
     
     public String getName() {
         return name;
+    }
+    
+    public ConfigFile getParent() {
+        return parent;
     }
     
     public List<ModuleField> getFields() {

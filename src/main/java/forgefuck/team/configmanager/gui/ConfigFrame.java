@@ -8,11 +8,14 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.border.TitledBorder;
 
+import forgefuck.team.configmanager.misc.Lang;
 import forgefuck.team.configmanager.objects.ConfigFile;
 import forgefuck.team.configmanager.objects.ConfigFolder;
 import forgefuck.team.configmanager.objects.Module;
@@ -24,26 +27,32 @@ public class ConfigFrame extends ExtendFrame {
     private final ScrollingList<Module> modulesList;
     private final JToolBar directoryBar, editorBar;
     private final JTextField directoryField;
+    private ModuleEditFrame lastEditFrame;
+    private final JRadioButton eng, rus;
+    private final ButtonGroup langs;
     
     public ConfigFrame() {
         super("Xenobyte Config Manager");
-        configsList = new ScrollingList<ConfigFile>("Конфигурации", 5, ListSorting.NONE);
-        modulesList = new ScrollingList<Module>("Модули", 15, ListSorting.ALPHABET);
-        createBackupBut = new JButton("Сохранить в бэкап");
-        chooseFolderBut = new JButton("Выбрать папку");
-        deleteBut = new JButton("Удалить конфиг");
-        updateFolderBut = new JButton("Обновить");
-        openFolderBut = new JButton("Открыть");
+        modulesList = new ScrollingList<Module>(15, ListSorting.ALPHABET);
+        configsList = new ScrollingList<ConfigFile>(5, ListSorting.NONE);
         directoryField = new JTextField(30);
-        saveBut = new JButton("Сохранить");
+        createBackupBut = new JButton();
+        chooseFolderBut = new JButton();
+        updateFolderBut = new JButton();
+        eng = new JRadioButton("ENG");
+        rus = new JRadioButton("RUS");
         directoryBar = new JToolBar();
+        openFolderBut = new JButton();
         editorBar = new JToolBar();
-        directoryBar.setBorder(customTitledBorder("Рабочая папка", TitledBorder.LEFT));
+        deleteBut = new JButton();
+        langs = new ButtonGroup();
+        saveBut = new JButton();
+        updateFolderBut.addActionListener(e -> loadFolder());
         directoryField.setEditable(false);
         directoryBar.setFloatable(false);
         editorBar.setFloatable(false);
         directoryField.setFont(FONT);
-        updateFolderBut.addActionListener(e -> loadFolder());
+        eng.setSelected(true);
         configsList.addListSelectionListener((e) -> {
             if (e.getValueIsAdjusting()) {
                 ConfigFile conf = configsList.getSelectedValue();
@@ -90,7 +99,7 @@ public class ConfigFrame extends ExtendFrame {
         });
         deleteBut.addActionListener((e) -> {
             ConfigFile conf = configsList.getSelectedValue();
-            if (conf != null && confirmMessage("Удалить " + conf + "?") && conf.delete()) {
+            if (conf != null && confirmMessage(Lang.get("Delete", "Удалить") + " " + conf + "?") && conf.delete()) {
                 loadFolder();
             }
         });
@@ -99,6 +108,12 @@ public class ConfigFrame extends ExtendFrame {
             if (conf != null) {
                 conf.save();
             }
+        });
+        eng.addActionListener((e) -> {
+            setLanguage(Lang.ENG);
+        });
+        rus.addActionListener((e) -> {
+            setLanguage(Lang.RUS);
         });
         directoryBar.add(directoryField);
         directoryBar.addSeparator();
@@ -110,10 +125,13 @@ public class ConfigFrame extends ExtendFrame {
         buttonsBar.add(saveBut);
         buttonsBar.add(createBackupBut);
         buttonsBar.add(deleteBut);
+        buttonsBar.add(eng);
+        buttonsBar.add(rus);
+        langs.add(eng);
+        langs.add(rus);
         add(directoryBar);
         add(editorBar);
         add(buttonsBar);
-        packFrame();
     }
     
     private void loadConfigs(ConfigFile[] configs) {
@@ -128,11 +146,24 @@ public class ConfigFrame extends ExtendFrame {
         modulesList.clearSelection();
     }
     
+    private void setLanguage(Lang lang) {
+        Lang.set(lang);
+        localizeSet();
+        loadFolder();
+    }
+    
+    private void closeModuleEdit() {
+        if (lastEditFrame != null) {
+            lastEditFrame.dispose();
+            lastEditFrame = null;
+        }
+    }
+    
     private void openModuleEdit(Module mod) {
         if (mod != null) {
-            ModuleEditFrame frame = new ModuleEditFrame(mod);
-            frame.packFrame(ConfigFrame.this);
-            frame.setVisible(true);
+            closeModuleEdit();
+            lastEditFrame = new ModuleEditFrame(mod);
+            lastEditFrame.setVisible(true);
         }
     }
     
@@ -142,6 +173,7 @@ public class ConfigFrame extends ExtendFrame {
     
     public void loadFolder(File file) {
         if (file.exists() && file.isDirectory()) {
+            closeModuleEdit();
             directoryField.setText(file.getPath());
             directoryField.setCaretPosition(0);
             loadConfigs(new ConfigFolder(file).getConfigsArray());
@@ -155,6 +187,18 @@ public class ConfigFrame extends ExtendFrame {
     
     public void loadFolder() {
         loadFolder(directoryField.getText());
+    }
+
+    @Override public void localizeSet() {
+        directoryBar.setBorder(customTitledBorder(Lang.get("Working directory", "Рабочая папка"), TitledBorder.LEFT));
+        createBackupBut.setText(Lang.get("Save to backup", "Сохранить в бэкап"));
+        chooseFolderBut.setText(Lang.get("Choose folder", "Выбрать папку"));
+        deleteBut.setText(Lang.get("Delete config", "Удалить конфиг"));
+        configsList.setTitle(Lang.get("Configs", "Конфигурации"));
+        updateFolderBut.setText(Lang.get("Refresh", "Обновить"));
+        modulesList.setTitle(Lang.get("Modules", "Модули"));
+        openFolderBut.setText(Lang.get("Open", "Открыть"));
+        saveBut.setText(Lang.get("Save", "Сохранить"));
     }
 
 }

@@ -1,7 +1,6 @@
 package forgefuck.team.configmanager.gui;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 
@@ -15,7 +14,7 @@ import javax.swing.border.TitledBorder;
 
 import forgefuck.team.configmanager.misc.Images;
 
-public class ExtendFrame extends JFrame {
+public abstract class ExtendFrame extends JFrame {
     
     public static final Border BORDER = BorderFactory.createLineBorder(Color.BLACK);
     public static final GridBagConstraints GBC = new GridBagConstraints();
@@ -39,15 +38,6 @@ public class ExtendFrame extends JFrame {
         setResizable(false);
     }
     
-    public void packFrame() {
-        packFrame(null);
-    }
-    
-    public void packFrame(Component component) {
-        pack();
-        setLocationRelativeTo(component);
-    }
-    
     public boolean confirmMessage(Object message) {
         return JOptionPane.showConfirmDialog(this, message, "Confirm", JOptionPane.YES_NO_OPTION) == 0 ? true : false;
     }
@@ -69,5 +59,16 @@ public class ExtendFrame extends JFrame {
     public static Border customTitledBorder(String title) {
         return customTitledBorder(title, TitledBorder.CENTER);
     }
+    
+    @Override public void setVisible(boolean visible) {
+        if (visible) {
+            localizeSet();
+            pack();
+            setLocationRelativeTo(null);
+        }
+        super.setVisible(visible);
+    }
+    
+    public abstract void localizeSet();
 
 }

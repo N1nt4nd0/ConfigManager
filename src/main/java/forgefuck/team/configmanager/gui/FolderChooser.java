@@ -6,13 +6,15 @@ import java.io.File;
 
 import javax.swing.JFileChooser;
 
+import forgefuck.team.configmanager.misc.Lang;
+
 public class FolderChooser extends JFileChooser {
     
     private static File lastOpenedDirectory;
     private final int openerIndent = 350;
     
     public FolderChooser() {
-        this("Выбрать папку");
+        this(Lang.get("Choose folder", "Выбрать папку"));
     }
     
     public FolderChooser(String title) {
@@ -26,7 +28,7 @@ public class FolderChooser extends JFileChooser {
     }
     
     public File openChooser() {
-        if (showDialog(null, "Выбрать") == JFileChooser.APPROVE_OPTION) {
+        if (showDialog(null, Lang.get("Choose", "Выбрать")) == JFileChooser.APPROVE_OPTION) {
             File dir = getSelectedFile();
             lastOpenedDirectory = dir;
             return dir;
